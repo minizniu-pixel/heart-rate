@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>運動効果 心拍数計算（Karvonen法）</title>
+<style>
+body{
+    font-family: sans-serif;
+    background:#f4f6f8;
+    padding:30px;
+}
+.container{
+    max-width:520px;
+    margin:auto;
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+h2{ text-align:center; }
+input{
+    width:100%;
+    padding:10px;
+    margin:8px 0 16px 0;
+    font-size:18px;
+}
+button{
+    width:100%;
+    padding:12px;
+    font-size:18px;
+    cursor:pointer;
+}
+.result{
+    margin-top:20px;
+    font-size:18px;
+    line-height:1.8;
+}
+.zone{ padding:10px; border-radius:8px; margin-top:8px; }
+.fat{ background:#d4edda; }
+.aero{ background:#fff3cd; }
+.cardio{ background:#f8d7da; }
+</style>
+</head>
+<body>
+
+<div class="container">
+<h2>運動効果の高い心拍数 計算</h2>
+
+<label>年齢</label>
+<input type="number" id="age" placeholder="例: 40">
+
+<label>安静時心拍数</label>
+<input type="number" id="rest" placeholder="例: 60">
+
+<button onclick="calc()">計算する</button>
+
+<div id="result" class="result"></div>
+</div>
+
+<script>
+function calc(){
+    const age = parseInt(document.getElementById('age').value);
+    const rest = parseInt(document.getElementById('rest').value);
+    if(!age || !rest){
+        alert("数値を入力してください");
+        return;
+    }
+
+    const mhr = 220 - age;
+
+    function zone(low, high){
+        const l = Math.round((mhr - rest) * low + rest);
+        const h = Math.round((mhr - rest) * high + rest);
+        return `${l} ～ ${h} bpm`;
+    }
+
+    document.getElementById('result').innerHTML = `
+        <strong>最大心拍数：</strong> ${mhr} bpm<br><br>
+
+        <div class="zone fat">
+        🟢 疲労回復ゾーン（50–60%）<br>${zone(0.5,0.6)}
+        </div>
+
+        <div class="zone fat">
+        🟢 脂肪燃焼ゾーン（60–70%）<br>${zone(0.6,0.7)}
+        </div>
+
+        <div class="zone aero">
+        🟡 有酸素ゾーン[心肺機能強化]（70–80%）<br>${zone(0.7,0.8)}
+        </div>
+
+        <div class="zone cardio">
+        🔴 無酸素ゾーン[運動力・筋肉強化]（80–90%）<br>${zone(0.8,0.9)}
+        </div>
+
+        <div class="zone cardio">
+        🔴 限界ギリギリゾーン[アスリート追込]（90–100%）<br>${zone(0.9,1.0)}
+        </div>
+
+    `;
+}
+</script>
+
+</body>
+</html>
