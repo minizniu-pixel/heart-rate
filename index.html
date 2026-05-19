@@ -53,6 +53,9 @@ button{
 <label>安静時心拍数</label>
 <input type="number" id="rest" placeholder="例: 60">
 
+<label>運動時心拍数</label>
+<input type="number" id="act" placeholder="例: 120">
+
 <button onclick="calc()">計算する</button>
 
 <div id="result" class="result"></div>
@@ -62,12 +65,14 @@ button{
 function calc(){
     const age = parseInt(document.getElementById('age').value);
     const rest = parseInt(document.getElementById('rest').value);
+    const act = parseInt(document.getElementById('act').value);
     if(!age || !rest){
         alert("数値を入力してください");
         return;
     }
 
     const mhr = 220 - age;
+    const a = Math.round((act- rest)/(mhr- rest)* 100);
 
     function zone(low, high){
         const l = Math.round((mhr - rest) * low + rest);
@@ -77,25 +82,25 @@ function calc(){
 
     document.getElementById('result').innerHTML = `
         <strong>最大心拍数：</strong> ${mhr} bpm<br><br>
+        <strong>運動時の％：</strong> ${a} %<br><br>
 
-        <div class="zone fat">
-        🟢 疲労回復ゾーン（50–60%）<br>${zone(0.5,0.6)}
+        <div class="zone cardio">
+        🔴 [A] 限界ギリギリゾーン[アスリート追込]（90–100%）<br>${zone(0.9,1.0)}
         </div>
-
-        <div class="zone fat">
-        🟢 脂肪燃焼ゾーン（60–70%）<br>${zone(0.6,0.7)}
+        <div class="zone cardio">
+        🔴 [B]  無酸素ゾーン[運動力・筋肉強化]（80–90%）<br>${zone(0.8,0.9)}
         </div>
 
         <div class="zone aero">
-        🟡 有酸素ゾーン[心肺機能強化]（70–80%）<br>${zone(0.7,0.8)}
+        🟡 [C]  有酸素ゾーン[心肺機能強化]（70–80%）<br>${zone(0.7,0.8)}
         </div>
 
-        <div class="zone cardio">
-        🔴 無酸素ゾーン[運動力・筋肉強化]（80–90%）<br>${zone(0.8,0.9)}
+        <div class="zone fat">
+        🟢 [D] 脂肪燃焼ゾーン（60–70%）<br>${zone(0.6,0.7)}
         </div>
 
-        <div class="zone cardio">
-        🔴 限界ギリギリゾーン[アスリート追込]（90–100%）<br>${zone(0.9,1.0)}
+        <div class="zone fat">
+        🟢 [E]疲労回復ゾーン（50–60%）<br>${zone(0.5,0.6)}
         </div>
 
     `;
