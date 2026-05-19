@@ -72,7 +72,12 @@ function calc(){
     }
 
     const mhr = 220 - age;
-    const a = Math.round((act- rest)/(mhr- rest)* 100);
+    
+const a = (
+    	    isNaN(act) || isNaN(rest) || isNaN(mhr) || mhr === rest
+	        )
+	        ? "-"
+	: Math.round((act - rest) / (mhr - rest) * 100);
 
     function zone(low, high){
         const l = Math.round((mhr - rest) * low + rest);
